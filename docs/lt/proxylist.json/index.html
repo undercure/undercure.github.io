@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>json生成器</title>
+</head>
+<body>
+<textarea rows="10" cols="30" id="IPAdrress" value placeholder="此处粘贴IP地址"></textarea>
+<textarea rows="10" cols="30" id="IPAdrressWithServerPort" value placeholder="带有端口号的IP地址"></textarea>
+<br>
+	<input type="text" id="ServerPort" value placeholder="端口号">
+	<input type="text" id="username" value placeholder="用户名">
+	<input type="text" id="password" value placeholder="密码">
+</br>
+
+<textarea rows="10" cols="30" id="JsonResult" value placeholder="此处生成json文件内容"></textarea>
+<br>
+<button type="submit" id="confirmServerPort" onclick="confirmServerPort();">为IP地址添加端口号</button>
+<button type="submit" id="confirmJson" onclick="confirmJson();">生成新json</button>
+</br>
+<script>
+
+function confirmServerPort() {
+	var IPAdrr = document.getElementById("IPAdrress").value.split('\n');
+	for (i = 0; i < IPAdrr.length; i++) {
+		document.getElementById("IPAdrressWithServerPort").innerHTML += IPAdrr[i] + "\:" + document.getElementById("ServerPort").value +"\n";
+	}
+}
+function confirmJson() {
+	var IPServer = document.getElementById("IPAdrressWithServerPort").value.split('\n');
+	document.getElementById("JsonResult").innerHTML += "{\n\t\"configs\" \: \[";
+	for (i = 0; i < IPServer.length; i++) {
+		var temp = IPServer[i].split('\:');
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\{";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"AdditionalRoute\": \"\",";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"ConnectedTimes\": 0,";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"Download_traffic\": 0,";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"FailureTimes\": 0,";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"Latency\": 0,";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"Upload_traffic\": 0,";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"charge_type\": 0,";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"enable\": true,";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"group\": \"myServer\",";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"iplocation\": \"\",";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"ipregion\": \"\",";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"method\": \"none\",";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"obfs\": \"plain\",";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"obfsparam\": \"\",";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"password\": \"" + document.getElementById("password").value + "\",";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"protocol\": \"origin\",";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"protocolparam\": \"\",";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"remarks\": \"\",";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"server\"\:\"" + temp[0].value + "\"\," ;
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"server_port\"\:"+ temp[1] + "\," ;
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"server_udp_port\": 0,";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"type\": 5,";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"udp_over_tcp\": 0,";
+		document.getElementById("JsonResult").innerHTML += "\n\t\t\t\"username\": \"" + document.getElementById("username").value + "\"";
+		if( i == IPServer.length -1 ){
+			document.getElementById("JsonResult").innerHTML += "\n\t\t\}";
+		}else{
+			document.getElementById("JsonResult").innerHTML += "\n\t\t\},";		
+		}
+	}
+	document.getElementById("JsonResult").innerHTML += "\n\t\]," + "\n\t\"idInUse\": 0";
+	document.getElementById("JsonResult").innerHTML += "\n\}";
+}
+</script>
+
+</body>
+</html>
