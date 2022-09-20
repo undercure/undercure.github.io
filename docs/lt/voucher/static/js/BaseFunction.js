@@ -1,4 +1,5 @@
 function confirm() {
+
     const a = document.getElementById("riqi");
     console.dir(a);
     const b = document.getElementById("date");
