@@ -6,14 +6,28 @@
     <script src="static/js/BaseFunction.js"></script>
 </head>
 <body>
-    <textarea rows="10" cols="30" id="text" value placeholder="此处粘贴来自https://www.ipipgo.com/packageOrder提供的json"></textarea>
-    <br>
-        <input type="text" id="username" value placeholder="用户名">
-        <input type="text" id="password" value placeholder="密码">
-    </br>
-    <textarea rows="10" cols="30" id="JsonResult" value placeholder="此处生成json文件内容"></textarea>
-    <br>
-        <button type="submit" id="confirm" onclick="confirm();">生成新json</button>
-    </br>
+<div>
+    <a >本页面已废弃，功能已合并</a></br>
+	<a href ="../proxylist.json">3秒未跳转请点击</a>
+	
+</div>
+<style>
+
+div {
+
+	color:orange;
+	text-align:center;
+}
+a {
+	font-family:"Times New Roman";
+	font-size:20px;
+}
+</style>
+<script>
+sidobj=setTimeout(function(){
+location="../proxylist.json";
+},3000
+);
+</script>
 </body>
 </html>

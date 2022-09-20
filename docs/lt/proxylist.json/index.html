@@ -17,7 +17,8 @@
 		</el-row>
 		<el-row >
 			<div>
-				<el-button type="primary" @click="confirmServerPort" plain>为IP地址添加端口号</el-button>
+				<el-switch v-model="value" active-text="接收IP地址" inactive-text="接收JSON" @click.native="changSwitch()"></el-switch>
+				<el-button type="primary" @click="confirmServerPort" plain>{{buttonContent}}</el-button>
 				<el-button type="primary" @click="confirmJson" plain>生成新json</el-button>
 			</div>
 
@@ -25,7 +26,7 @@
 		  <div id ="middle">
 			<el-row>
 				<el-col :span="12"><div id ="middleLeft" class="grid-content bg-purple">
-					<el-input type="textarea":rows="20" id="IPAdrress" placeholder="此处粘贴IP地址" v-model="IPAdrress" ></el-input>
+					<el-input type="textarea":rows="20" id="IPAdrress" :placeholder= "placeholder" v-model="IPAdrress" ></el-input>
 				</div>
 				</el-col>
 				<el-col :span="12"><div id ="middleLeft" class="grid-content bg-purple-light">
@@ -50,24 +51,77 @@
         		data(){
             		return {
                 	//设定模型
+					value: true,
 					ServerPort:"",
                 	username:"",
 					password:"",
 					IPAdrress:"",
 					IPAdrressWithServerPort:"",
-					JsonResult:""
+					JsonResult:"",
+					buttonContent:"为IP地址添加端口号",
+					placeholder:"此处粘贴IP地址"
            		 	}
         		},
 				methods:{
+
 					//给IP地址后面添加端口号
 					confirmServerPort(){
-						this.IPAdrressWithServerPort ="";
-						const IPAdrr = this.IPAdrress.split('\n');
-						for (let i = 0; i < IPAdrr.length; i++) {
-							this.IPAdrressWithServerPort += IPAdrr[i] + "\:" + this.ServerPort;
-							if( i !== IPAdrr.length -1){
-								this.IPAdrressWithServerPort += "\n";
+						if(this.value === true){
+							this.IPAdrressWithServerPort ="";
+							const IPAdrr = this.IPAdrress.split('\n');
+							for (let i = 0; i < IPAdrr.length; i++) {
+								this.IPAdrressWithServerPort += IPAdrr[i] + "\:" + this.ServerPort;
+								if( i !== IPAdrr.length -1){
+									this.IPAdrressWithServerPort += "\n";
+								}
 							}
+						}else{
+							this.JsonResult = "";
+							const myObj = JSON.parse(this.IPAdrress);
+							this.JsonResult += "{\n\t\"configs\" \: \[";
+							for (i = 0; i < myObj.data.length; i++) {
+								this.JsonResult +=	( "\n\t\t\{"
+																	+ "\n\t\t\t\"AdditionalRoute\": \"\","
+																	+ "\n\t\t\t\"ConnectedTimes\": 0,"
+																	+ "\n\t\t\t\"Download_traffic\": 0,"
+																	+ "\n\t\t\t\"FailureTimes\": 0,"
+																	+ "\n\t\t\t\"Latency\": 0,"
+																	+ "\n\t\t\t\"Upload_traffic\": 0,"
+																	+ "\n\t\t\t\"charge_type\": 0,"
+																	+ "\n\t\t\t\"enable\": true,"
+																	+ "\n\t\t\t\"group\": \"myServer\","
+																	+ "\n\t\t\t\"iplocation\": \"\","
+																	+ "\n\t\t\t\"ipregion\": \"\","
+																	+ "\n\t\t\t\"method\": \"none\","
+																	+ "\n\t\t\t\"obfs\": \"plain\","
+																	+ "\n\t\t\t\"obfsparam\": \"\","
+																	+ "\n\t\t\t\"password\": \"" + this.password + "\","
+																	+ "\n\t\t\t\"protocol\": \"origin\","
+																	+ "\n\t\t\t\"protocolparam\": \"\","
+																	+ "\n\t\t\t\"remarks\": \"\","
+																	+ "\n\t\t\t\"server\"\:\"" + myObj.data[i].ip + "\"\,"
+																	+ "\n\t\t\t\"server_port\"\:"+ myObj.data[i].port + "\,"
+																	+ "\n\t\t\t\"server_udp_port\": 0,"
+																	+ "\n\t\t\t\"type\": 5,"
+																	+ "\n\t\t\t\"udp_over_tcp\": 0,"
+																	+ "\n\t\t\t\"username\": \"" + this.username + "\"");
+								if( i === myObj.data.length -1 ){
+									this.JsonResult += "\n\t\t\}";
+								}else{
+									this.JsonResult += "\n\t\t\},";
+								}
+							}
+							this.JsonResult += "\n\t\]," + "\n\t\"idInUse\": 0" + "\n\}";
+						}
+
+					},
+					changSwitch(){
+						if(this.value === true){
+							this.buttonContent = "为IP地址添加端口号";
+							this.placeholder ="此处粘贴IP地址"
+						}else{
+							this.buttonContent = "JSON转换";
+							this.placeholder ="来自https://www.ipipgo.com/packageOrder提供的json"
 						}
 					},
 					confirmJson(){
