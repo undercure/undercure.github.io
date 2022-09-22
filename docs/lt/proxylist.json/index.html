@@ -5,8 +5,8 @@
 		<title>json生成器</title>
 	 <script src="static/js/vue.js"></script>
 	 <script src="static/js/index.js"></script>
-	 <link rel="stylesheet" href="static/css/index.css">
-	 <link rel="stylesheet" href="static/css/BaseCSS.css">
+	 <link  rel="stylesheet" href="static/css/index.css">
+	 <link rel="stylesheet" href="static/css/BaseCSS.css" >
 	</head>
 	<body>
 		<div id ="app">
@@ -25,17 +25,17 @@
 		  </el-row>
 		  <div id ="middle">
 			<el-row>
-				<el-col :span="12"><div id ="middleLeft" class="grid-content bg-purple">
-					<el-input type="textarea":rows="20" id="IPAdrress" :placeholder= "placeholder" v-model="IPAdrress" ></el-input>
+				<el-col :span="12"><div class="grid-content bg-purple">
+					<el-input type="textarea":rows="20" id="IPAddress" :placeholder= "placeholder" v-model="IPAddress" ></el-input>
 				</div>
 				</el-col>
-				<el-col :span="12"><div id ="middleLeft" class="grid-content bg-purple-light">
-					<el-input type="textarea":rows="20" id="IPAdrressWithServerPort" placeholder="带有端口号的IP地址" v-model="IPAdrressWithServerPort" ></el-input></div>
+				<el-col :span="12"><div class="grid-content bg-purple-light">
+					<el-input type="textarea":rows="20" id="IPAddressWithServerPort" placeholder="带有端口号的IP地址" v-model="IPAddressWithServerPort" ></el-input></div>
 				</el-col>
 			</el-row>
 
 			<el-row>
-				<el-col :span="24"><div id ="middleLeft" class="grid-content bg-purple">
+				<el-col :span="24"><div class="grid-content bg-purple">
 					<el-input type="textarea":rows="5" id="JsonResult" placeholder="此处生成json文件内容" v-model="JsonResult"></el-input></el-input>
 				</div>
 				</el-col>
@@ -55,38 +55,38 @@
 					ServerPort:"",
                 	username:"",
 					password:"",
-					IPAdrress:"",
-					IPAdrressWithServerPort:"",
+					IPAddress:"",
+					IPAddressWithServerPort:"",
 					JsonResult:"",
 					buttonContent:"为IP地址添加端口号",
 					placeholder:"此处粘贴IP地址"
            		 	}
         		},
 				methods:{
-
-					//给IP地址后面添加端口号
 					confirmServerPort(){
 						if(this.value === true){
-							this.IPAdrressWithServerPort ="";
-							if(this.IPAdrress === ""){
+							this.IPAddressWithServerPort ="";
+							if(this.IPAddress === ""){
 								alert("请在框中输入IP");
 							}else{
-								const IPAdrr = this.IPAdrress.split('\n');
-								for (let i = 0; i < IPAdrr.length; i++) {
-									this.IPAdrressWithServerPort += IPAdrr[i] + "\:" + this.ServerPort;
-									if( i !== IPAdrr.length -1){
-										this.IPAdrressWithServerPort += "\n";
+								//给IP地址后面添加端口号
+								const IPAddr = this.IPAddress.split('\n');
+								for (let i = 0; i < IPAddr.length; i++) {
+									this.IPAddressWithServerPort += IPAddr[i] + "\:" + this.ServerPort;
+									if( i !== IPAddr.length -1){
+										this.IPAddressWithServerPort += "\n";
 									}
 								}
 							}
 						}else{
 							this.JsonResult = "";
-							if(this.IPAdrress === ""){
+							if(this.IPAddress === ""){
 							alert("请在框中输入JSON");
 							}else{
-								const myObj = JSON.parse(this.IPAdrress);
+								//来自https://www.ipipgo.com/packageOrder提供的json转换为proxyList.json格式
+								const myObj = JSON.parse(this.IPAddress);
 								this.JsonResult += "{\n\t\"configs\" \: \[";
-									for (i = 0; i < myObj.data.length; i++) {
+									for (let i = 0; i < myObj.data.length; i++) {
 										this.JsonResult +=	( "\n\t\t\{"
 																	+ "\n\t\t\t\"AdditionalRoute\": \"\","
 																	+ "\n\t\t\t\"ConnectedTimes\": 0,"
@@ -122,6 +122,7 @@
 							}
 						}
 					},
+					//Switch滑块事件方法
 					changSwitch(){
 						if(this.value === true){
 							this.buttonContent = "为IP地址添加端口号";
@@ -131,45 +132,50 @@
 							this.placeholder ="来自https://www.ipipgo.com/packageOrder提供的json"
 						}
 					},
+					//带有端口号的地址转为JSON字符串
 					confirmJson(){
-						const IPServer = this.IPAdrressWithServerPort.split('\n');
-						//清空文本框内容
-						this.JsonResult = "";
-						//生成json文件字符串
-						this.JsonResult += "{\n\t\"configs\" \: \[";
-						for (let i = 0; i < IPServer.length; i++) {
-							const temp = IPServer[i].split('\:');
-							this.JsonResult += ( "\n\t\t\{"
-														+ "\n\t\t\t\"AdditionalRoute\": \"\","
-														+ "\n\t\t\t\"ConnectedTimes\": 0,"
-														+ "\n\t\t\t\"Download_traffic\": 0,"
-														+ "\n\t\t\t\"FailureTimes\": 0,"
-														+ "\n\t\t\t\"Latency\": 0,"
-														+ "\n\t\t\t\"Upload_traffic\": 0,"
-														+ "\n\t\t\t\"charge_type\": 0,"
-														+ "\n\t\t\t\"enable\": true,"
-														+ "\n\t\t\t\"group\": \"myServer\","
-														+ "\n\t\t\t\"iplocation\": \"\","
-														+ "\n\t\t\t\"ipregion\": \"\","
-														+ "\n\t\t\t\"method\": \"none\","
-														+ "\n\t\t\t\"obfs\": \"plain\","
-														+ "\n\t\t\t\"obfsparam\": \"\","
-														+ "\n\t\t\t\"password\": \"" + this.password + "\","
-														+ "\n\t\t\t\"protocol\": \"origin\","
-														+ "\n\t\t\t\"protocolparam\": \"\","
-														+ "\n\t\t\t\"remarks\": \"\","
-														+ "\n\t\t\t\"server\"\:\"" + temp[0] + "\"\,"
-														+ "\n\t\t\t\"server_port\"\:"+ temp[1] + "\,"
-														+ "\n\t\t\t\"server_udp_port\": 0,"
-														+ "\n\t\t\t\"type\": 5,"
-														+ "\n\t\t\t\"udp_over_tcp\": 0,"
-														+ "\n\t\t\t\"username\": \"" + this.username + "\"")
-														+ "\n\t\t\}";
-							if( i !== IPServer.length -1 ){
-								this.JsonResult += ",";
+						if(this.IPAddressWithServerPort === ""){
+							alert("请在框中输入带有端口号的IP");
+						}else {
+							const IPServer = this.IPAddressWithServerPort.split('\n');
+							//清空文本框内容
+							this.JsonResult = "";
+							//生成json文件字符串
+							this.JsonResult += "{\n\t\"configs\" \: \[";
+							for (let i = 0; i < IPServer.length; i++) {
+								const temp = IPServer[i].split('\:');
+								this.JsonResult += ( "\n\t\t\{"
+										+ "\n\t\t\t\"AdditionalRoute\": \"\","
+										+ "\n\t\t\t\"ConnectedTimes\": 0,"
+										+ "\n\t\t\t\"Download_traffic\": 0,"
+										+ "\n\t\t\t\"FailureTimes\": 0,"
+										+ "\n\t\t\t\"Latency\": 0,"
+										+ "\n\t\t\t\"Upload_traffic\": 0,"
+										+ "\n\t\t\t\"charge_type\": 0,"
+										+ "\n\t\t\t\"enable\": true,"
+										+ "\n\t\t\t\"group\": \"myServer\","
+										+ "\n\t\t\t\"iplocation\": \"\","
+										+ "\n\t\t\t\"ipregion\": \"\","
+										+ "\n\t\t\t\"method\": \"none\","
+										+ "\n\t\t\t\"obfs\": \"plain\","
+										+ "\n\t\t\t\"obfsparam\": \"\","
+										+ "\n\t\t\t\"password\": \"" + this.password + "\","
+										+ "\n\t\t\t\"protocol\": \"origin\","
+										+ "\n\t\t\t\"protocolparam\": \"\","
+										+ "\n\t\t\t\"remarks\": \"\","
+										+ "\n\t\t\t\"server\"\:\"" + temp[0] + "\"\,"
+										+ "\n\t\t\t\"server_port\"\:"+ temp[1] + "\,"
+										+ "\n\t\t\t\"server_udp_port\": 0,"
+										+ "\n\t\t\t\"type\": 5,"
+										+ "\n\t\t\t\"udp_over_tcp\": 0,"
+										+ "\n\t\t\t\"username\": \"" + this.username + "\"")
+										+ "\n\t\t\}";
+								if( i !== IPServer.length -1 ){
+									this.JsonResult += ",";
+								}
 							}
+							this.JsonResult += "\n\t\],\n\t\"idInUse\": 0\n\}";
 						}
-						this.JsonResult += "\n\t\],\n\t\"idInUse\": 0\n\}";
 					}
 				}
     		})
